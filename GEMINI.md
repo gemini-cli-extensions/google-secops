@@ -2,6 +2,10 @@
 
 This repository contains the **Google SecOps Extension**, providing specialized skills and tools for security operations.
 
+This is not an officially supported Google product.
+
+This project is not eligible for the Google Open Source Software Vulnerability Rewards Program.
+
 ## Overview
 
 This extension packages setup and key security workflows into [skills](https://agentskills.io/specification). 
