@@ -60,15 +60,15 @@ Crucially, it **automatically configures the [Google Cloud Remote MCP Server for
 You can install this extension directly without cloning:
 
 ```bash
-gemini extensions install github:dandye/secops-gemini-extension
+gemini extensions install https://github.com/gemini-cli-extensions/google-secops
 ```
 
 ### Option 2: Clone and Install Locally (Best for Development)
 
 1.  **Clone the repository**:
     ```bash
-    git clone https://github.com/dandye/secops-gemini-extension.git
-    cd secops-gemini-extension
+    git clone https://github.com/gemini-cli-extensions/google-secops.git
+    cd google-secops
     ```
 
 2.  **Install the extension**:
@@ -87,8 +87,8 @@ gemini extensions install github:dandye/secops-gemini-extension
 
 During installation, you will be prompted for several parameters:
 
-*   `PROJECT_ID`: Your Google Cloud Project ID.
-*   `CUSTOMER_ID`: Your Chronicle Customer UUID.
+*   `PROJECT_ID`: Your Google Cloud Project ID (not number).
+*   `CUSTOMER_ID`: Your Chronicle Customer UUID4.
 *   `REGION`: Your Chronicle Region (e.g., `us`, `europe-west1`).
 *   `SERVER_URL`: The regional MCP endpoint (e.g., `https://chronicle.us.rep.googleapis.com/mcp`).
 
