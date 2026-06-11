@@ -6,6 +6,9 @@ category: security_operations
 personas:
   - incident_responder
   - tier2_soc_analyst
+metadata:
+  author: Google
+  version: 1.1.0
 ---
 
 # Security Investigator

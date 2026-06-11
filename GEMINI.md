@@ -76,10 +76,49 @@ gemini extensions install https://github.com/gemini-cli-extensions/google-secops
     gemini extensions install .
     ```
 
+### Option 3: Install as an Antigravity Plugin (via `just`)
+
+If you have `just` installed, you can use the provided recipes:
+```bash
+# Install globally for Antigravity/Agi
+just install-agy
+
+# Uninstall from Antigravity/Agi
+just uninstall-agy
+```
+
 ### Updating and Uninstalling
 
 *   **Update**: `gemini extensions update google-secops`
 *   **Uninstall**: `gemini extensions uninstall google-secops`
+
+## Loading as a Plugin (Antigravity, Claude Code & OpenAI Codex)
+
+You can load this extension directly as a plugin in **Antigravity**, **Claude Code**, and **OpenAI Codex**.
+
+### Antigravity Integration
+To load the extension in Antigravity, place or symlink the repository folder inside one of these directories:
+*   **Workspace-Level**: Place in `.agents/plugins/google-secops/` (active only for the current workspace).
+*   **Global-Level**: Place in `~/.gemini/config/plugins/google-secops/` (active across all workspaces).
+
+Antigravity will automatically discover the `plugin.json` manifest file at the root of the directory and expose all SecOps skills, guidelines, and rules.
+
+### Claude Code Integration
+To load the extension in Claude Code:
+*   **Workspace-Level**: Place or symlink the repository folder inside `.claude/plugins/google-secops/` at the root of your workspace.
+*   **Global-Level**: Run the `claude` command with the plugin directory flag:
+    ```bash
+    claude --plugin-dir /path/to/google-secops
+    ```
+
+Claude Code will automatically discover the `.claude-plugin/plugin.json` manifest and expose all skills under the `/google-secops:` namespace.
+
+### OpenAI Codex Integration
+To load the extension in Codex:
+*   **Workspace-Level / Manual Integration**: Place or symlink the repository folder inside `.codex-plugin/` at the root of your workspace or custom plugin marketplace directory.
+
+Codex will automatically discover the `.codex-plugin/plugin.json` manifest file at the root of the directory and register all SecOps skills.
+
 
 ## Post-Installation
 
@@ -102,15 +141,12 @@ Run the following command to ensure the skills are loaded:
 /skills list
 ```
 
-You should see `secops-setup-antigravity`, `secops-triage`, etc., in the list.
+You should see `secops-triage`, etc., in the list.
 
 ## Usage
 
 ### Available Skills
 
-*   **Setup Assistant** (`secops-setup-antigravity`)
-    *   *Trigger*: "Help me set up Antigravity", "Configure Antigravity for SecOps"
-    *   *Function*: Helps configure Antigravity to also use the Remote MCP Server.
 *   **Alert Triage** (`secops-triage`)
     *   *Trigger*: "Triage alert [ID]", "Analyze case [ID]"
     *   *Function*: Orchestrates a Tier 1 triage workflow (deduplication, enrichment, classification).

@@ -1,0 +1,9 @@
+.env
+.env.local
+.env.production
+.env.development
+.env.staging
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store

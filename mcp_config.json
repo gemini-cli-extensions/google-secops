@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "remote-mcp-secops": {
+      "serverUrl": "https://us-chronicle.googleapis.com/mcp",
+      "authProviderType": "google_credentials",
+      "oauth": {
+        "scopes": [
+          "https://www.googleapis.com/auth/cloud-platform"
+        ]
+      }
+    }
+  }
+}
