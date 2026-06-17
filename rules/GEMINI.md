@@ -124,14 +124,17 @@ Codex will automatically discover the `.codex-plugin/plugin.json` manifest file 
 
 ### 1. Configuration
 
-During installation, you will be prompted for several parameters:
+During installation under Antigravity / Gemini CLI, you will be prompted for several parameters:
 
 *   `PROJECT_ID`: Your Google Cloud Project ID (not number).
 *   `CUSTOMER_ID`: Your Chronicle Customer UUID4.
 *   `REGION`: Your Chronicle Region (e.g., `us`, `europe-west1`).
 *   `SERVER_URL`: The regional MCP endpoint (e.g., `https://chronicle.us.rep.googleapis.com/mcp`).
 
-> **Note**: These values are persisted in `~/.gemini/extensions/google-secops/.env`. You can edit this file at any time to update your configuration.
+> **Note**: For Antigravity, these values are persisted in `~/.gemini/extensions/google-secops/.env`. You can edit this file at any time to update your configuration.
+
+#### Claude Code Configuration
+For Claude Code, since it loads the `.mcp.json` definition directly, the variables (`PROJECT_ID`, `CUSTOMER_ID`, `REGION`, `SERVER_URL`) should be set in your shell environment or loaded using tools like `direnv` or a `.env` file in the current working directory.
 
 ### 2. Verify Skills
 

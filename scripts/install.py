@@ -133,6 +133,8 @@ def main():
     mcp_str = json.dumps(mcp_data)
     mcp_str = mcp_str.replace("${SERVER_URL}", config["SERVER_URL"])
     mcp_str = mcp_str.replace("${PROJECT_ID}", config["PROJECT_ID"])
+    mcp_str = mcp_str.replace("${CUSTOMER_ID}", config["CUSTOMER_ID"])
+    mcp_str = mcp_str.replace("${REGION}", config["REGION"])
     
     # Write updated mcp_config.json to target
     with open(template_path, "w", encoding="utf-8") as f:
@@ -145,7 +147,7 @@ def main():
             f.write(f"{k}={v}\n")
             
     # Prepend context metadata to GEMINI.md in target directory
-    gemini_md_path = target_dir / "GEMINI.md"
+    gemini_md_path = target_dir / "rules/GEMINI.md"
     if gemini_md_path.exists():
         with open(gemini_md_path, "r", encoding="utf-8") as f:
             orig_content = f.read()
