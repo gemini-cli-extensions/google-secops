@@ -20,19 +20,25 @@ install-agy-all mode="global" path=".":
 
 
 
-# Uninstall Antigravity extension
-uninstall-agy:
-  #!/usr/bin/env bash
-  set -euo pipefail
-  TARGET_DIR="$HOME/.gemini/config/plugins/google-secops"
+# Uninstall plugin for Antigravity Desktop
+uninstall-agy-dsk mode="global" path=".":
+  python3 scripts/install.py --flavor=agy-dsk --uninstall --mode={{mode}} --project-path={{path}}
 
-  if [ -d "$TARGET_DIR" ] || [ -L "$TARGET_DIR" ]; then
-      echo "Removing Google SecOps extension from $TARGET_DIR..."
-      rm -rf "$TARGET_DIR"
-      echo "Google SecOps extension has been uninstalled successfully."
-  else
-      echo "Google SecOps extension is not installed in $TARGET_DIR"
-  fi
+# Uninstall skills for Antigravity IDE
+uninstall-agy-ide mode="global" path=".":
+  python3 scripts/install.py --flavor=ide --uninstall --mode={{mode}} --project-path={{path}}
+
+# Uninstall skills for Antigravity CLI
+uninstall-agy-cli mode="global" path=".":
+  python3 scripts/install.py --flavor=cli --uninstall --mode={{mode}} --project-path={{path}}
+
+# Uninstall from all Antigravity flavors
+uninstall-agy-all mode="global" path=".":
+  python3 scripts/install.py --flavor=all --uninstall --mode={{mode}} --project-path={{path}}
+
+# Uninstall Antigravity extension (alias for uninstall-agy-all)
+uninstall-agy mode="global" path=".":
+  python3 scripts/install.py --flavor=all --uninstall --mode={{mode}} --project-path={{path}}
 
 # Get plugin version from manifest
 plugin-version file="plugin.json":

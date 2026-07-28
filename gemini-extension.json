@@ -7,7 +7,8 @@
     "skills/triage",
     "skills/investigate",
     "skills/hunt",
-    "skills/cases"
+    "skills/cases",
+    "skills/detection-engineering"
   ],
   "settings": [
     {

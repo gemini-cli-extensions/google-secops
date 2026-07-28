@@ -80,10 +80,13 @@ gemini extensions install https://github.com/gemini-cli-extensions/google-secops
 
 If you have `just` installed, you can use the provided recipes:
 ```bash
-# Install globally for Antigravity/Agi
-just install-agy
+# Install globally for Antigravity Desktop
+just install-agy-dsk
 
-# Uninstall from Antigravity/Agi
+# Or install for all Antigravity runtimes (Desktop, IDE, CLI)
+just install-agy-all
+
+# Uninstall (supports specific flavors like uninstall-agy-dsk or all flavors via uninstall-agy)
 just uninstall-agy
 ```
 
@@ -162,6 +165,9 @@ You should see `secops-triage`, etc., in the list.
 *   **Cases** (`secops-cases`)
     *   *Trigger*: "List cases", "Show recent cases", "/secops:cases"
     *   *Function*: Lists recent SOAR cases to verify connectivity.
+*   **Detection Engineering** (`secops-detection-engineering`)
+    *   *Trigger*: "Evaluate detection coverage", "Generate TDOs from blog", "Check rule coverage for TTP"
+    *   *Function*: Automates the end-to-end detection engineering workflow (threat intell extraction, TDO generation, synthetic event simulation, coverage evaluation, and YARA-L rule creation).
 
 ### Custom Commands
 

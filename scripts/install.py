@@ -299,20 +299,14 @@ def install_skills(workspace_dir: Path, target_dir: Path) -> None:
 
     target_dir.mkdir(parents=True, exist_ok=True)
 
-    skills = ["triage", "investigate", "hunt", "cases"]
-    for skill in skills:
-        src = source_skills_dir / skill
-        dst = target_dir / skill
-        if src.exists():
+    for src in sorted(source_skills_dir.iterdir()):
+        if src.is_dir() and not src.name.startswith(".") and (src / "SKILL.md").exists():
+            skill = src.name
+            dst = target_dir / skill
             print(f"Installing skill '{skill}' into {dst}...")
             if dst.exists():
                 shutil.rmtree(dst)
             shutil.copytree(src, dst)
-        else:
-            print(
-                f"Warning: Skill '{skill}' not found in workspace.",
-                file=sys.stderr,
-            )
 
     print(f"Skills successfully installed in {target_dir}")
 
@@ -416,6 +410,51 @@ def install_mcp_config(
         sys.exit(1)
 
 
+def uninstall_flavor(
+    workspace_dir: Path, target_dir: Path, flavor: str
+) -> None:
+    """Uninstalls plugin or skills from target_dir for a given flavor.
+
+    Args:
+        workspace_dir: Path to the root workspace directory.
+        target_dir: Target directory where plugin/skills are installed.
+        flavor: Target flavor ('agy-dsk', 'ide', or 'cli').
+    """
+    if not target_dir.exists():
+        print(f"Nothing to uninstall: {target_dir} does not exist.")
+        return
+
+    if flavor == "agy-dsk":
+        print(f"Removing Google SecOps plugin from {target_dir}...")
+        try:
+            shutil.rmtree(target_dir)
+            print("Plugin successfully uninstalled.")
+        except Exception as e:
+            print(
+                f"Error uninstalling plugin from {target_dir}: {e}",
+                file=sys.stderr,
+            )
+    else:
+        source_skills_dir = workspace_dir / "skills"
+        if not source_skills_dir.exists():
+            return
+        removed_any = False
+        for src in source_skills_dir.iterdir():
+            if src.is_dir() and not src.name.startswith("."):
+                dst = target_dir / src.name
+                if dst.exists():
+                    print(f"Removing skill '{src.name}' from {target_dir}...")
+                    try:
+                        shutil.rmtree(dst)
+                        removed_any = True
+                    except Exception as e:
+                        print(f"Error removing {dst}: {e}", file=sys.stderr)
+        if removed_any:
+            print(f"Skills successfully uninstalled from {target_dir}.")
+        else:
+            print(f"No Google SecOps skills found in {target_dir}.")
+
+
 def main() -> None:
     """Main CLI entry point for the installation script."""
     parser = argparse.ArgumentParser(
@@ -438,6 +477,11 @@ def main() -> None:
             "Path to the project root directory (only used in project mode,"
             " default: current directory)."
         ),
+    )
+    parser.add_argument(
+        "--uninstall",
+        action="store_true",
+        help="Uninstall the extension/skills for the specified flavor.",
     )
 
     args = parser.parse_args()
@@ -471,23 +515,33 @@ def main() -> None:
         else ["agy-dsk", "ide", "cli"]
     )
 
-    # We prompt/config if installing standalone OR in global mode
+    # We prompt/config only if installing (not uninstalling) and installing standalone OR in global mode
     config = None
-    if "agy-dsk" in flavors_to_install or args.mode == "global":
+    if not args.uninstall and (
+        "agy-dsk" in flavors_to_install or args.mode == "global"
+    ):
         defaults = get_defaults()
         config = prompt_user(defaults)
 
     for flavor in flavors_to_install:
         target_dir = get_target_dir(flavor, args.mode, args.project_path)
-        print(f"\n--- Installing flavor '{flavor}' ({args.mode} mode) ---")
-        if flavor == "agy-dsk":
-            install_agy_dsk(workspace_dir, target_dir, config)
-            if config:
-                install_mcp_config(workspace_dir, flavor, config, target_dir)
+        if args.uninstall:
+            print(
+                f"\n--- Uninstalling flavor '{flavor}' ({args.mode} mode) ---"
+            )
+            uninstall_flavor(workspace_dir, target_dir, flavor)
         else:
-            install_skills(workspace_dir, target_dir)
-            if args.mode == "global" and config:
-                install_mcp_config(workspace_dir, flavor, config)
+            print(f"\n--- Installing flavor '{flavor}' ({args.mode} mode) ---")
+            if flavor == "agy-dsk":
+                install_agy_dsk(workspace_dir, target_dir, config)
+                if config:
+                    install_mcp_config(
+                        workspace_dir, flavor, config, target_dir
+                    )
+            else:
+                install_skills(workspace_dir, target_dir)
+                if args.mode == "global" and config:
+                    install_mcp_config(workspace_dir, flavor, config)
 
 
 if __name__ == "__main__":
