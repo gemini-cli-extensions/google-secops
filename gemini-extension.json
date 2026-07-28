@@ -37,8 +37,8 @@
     }
   ],
   "mcpServers": {
-    "remote-mcp-secops": {
-      "httpUrl": "${SERVER_URL}",
+    "google-security-operations": {
+      "serverUrl": "${SERVER_URL}",
       "authProviderType": "google_credentials",
       "oauth": {
         "scopes": [
@@ -46,7 +46,8 @@
         ]
       },
       "headers": {
-        "x-goog-user-project": "${PROJECT_ID}"
+        "x-goog-user-project": "${PROJECT_ID}",
+        "Authorization": "Bearer ${BEARER_TOKEN}"
       },
       "env": {
         "PROJECT_ID": "${PROJECT_ID}",

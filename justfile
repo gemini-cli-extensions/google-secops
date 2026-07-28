@@ -2,9 +2,23 @@
 list:
   just -l
 
-# Install Google SecOps extension into Agi/Antigravity plugins directory
-install-agy:
-  python3 scripts/install.py
+# Install Google SecOps extension into Agi/Antigravity plugins directory (Standalone App) - supports global install (default) or project level with mode=project and project-path=<path>
+install-agy-dsk mode="global" project-path=".":
+  python3 scripts/install.py --flavor=agy-dsk --mode={{mode}} --project-path={{project-path}}
+
+
+# Install Google SecOps skills for AGY IDE - supports global install (default) or project level with mode=project and project-path=<path>
+install-agy-ide mode="global" project-path=".":
+  python3 scripts/install.py --flavor=ide --mode={{mode}} --project-path={{project-path}}
+
+# Install Google SecOps skills for AGY CLI - supports global install (default) or project level with mode=project and project-path=<path>
+install-agy-cli mode="global" project-path=".":
+  python3 scripts/install.py --flavor=cli --mode={{mode}} --project-path={{project-path}}
+
+# Install Google SecOps extension/skills for all flavors (Agi, IDE, CLI) - supports global install (default) or project level with mode=project and project-path=<path>
+install-agy-all mode="global" project-path=".":
+  python3 scripts/install.py --flavor=all --mode={{mode}} --project-path={{project-path}}
+
 
 
 # Uninstall Google SecOps extension from Agi plugins directory
