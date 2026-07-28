@@ -174,10 +174,6 @@ def get_target_dir(flavor: str, mode: str, project_path: str) -> Path:
     elif flavor == "ide":
         return gemini_home / "antigravity" / "skills"
     elif flavor == "cli":
-        if (gemini_home / "argolis" / "antigravity-cli").exists():
-            return gemini_home / "argolis" / "antigravity-cli" / "skills"
-        if (gemini_home / "antigravity-cli").exists():
-            return gemini_home / "antigravity-cli" / "skills"
         return gemini_home / "antigravity-cli" / "skills"
 
     raise ValueError(f"Unknown flavor: {flavor}")
@@ -336,8 +332,6 @@ def get_profile_dir(flavor: str) -> Path | None:
             return gemini_home / "antigravity-ide"
         return gemini_home / "antigravity"
     elif flavor == "cli":
-        if (gemini_home / "argolis" / "antigravity-cli").exists():
-            return gemini_home / "argolis" / "antigravity-cli"
         return gemini_home / "antigravity-cli"
     return None
 
