@@ -256,28 +256,21 @@ def install_agy_dsk(
         for k, v in config.items():
             f.write(f"{k}={v}\n")
 
-    # Prepend context metadata to GEMINI.md in target directory
-    gemini_md_path = target_dir / "rules/GEMINI.md"
-    if gemini_md_path.exists():
-        with open(gemini_md_path, "r", encoding="utf-8") as f:
-            orig_content = f.read()
-    else:
-        orig_content = ""
-
-    context_prefix = f"""# Google SecOps Environment Context
-
-This file defines the configuration parameters for the Google SecOps Plugin.
-
-*   `PROJECT_ID`: {config['PROJECT_ID']}
-*   `CUSTOMER_ID`: {config['CUSTOMER_ID']}
-*   `REGION`: {config['REGION']}
-*   `SERVER_URL`: {config['SERVER_URL']}
-
----
-
-"""
-    with open(gemini_md_path, "w", encoding="utf-8") as f:
-        f.write(context_prefix + orig_content)
+    # Perform variable replacement in rules directory
+    rules_dir = target_dir / "rules"
+    if rules_dir.exists():
+        for rule_file in rules_dir.glob("*.md"):
+            try:
+                with open(rule_file, "r", encoding="utf-8") as f:
+                    content = f.read()
+                updated_content = replace_placeholders(content, config)
+                with open(rule_file, "w", encoding="utf-8") as f:
+                    f.write(updated_content)
+            except Exception as e:
+                print(
+                    f"Error updating rule file {rule_file}: {e}",
+                    file=sys.stderr,
+                )
 
     print(f"Standalone plugin successfully installed in {target_dir}")
 
@@ -309,6 +302,36 @@ def install_skills(workspace_dir: Path, target_dir: Path) -> None:
             shutil.copytree(src, dst)
 
     print(f"Skills successfully installed in {target_dir}")
+
+
+def install_rules(
+    workspace_dir: Path, target_rules_dir: Path, config: dict[str, str] | None
+) -> None:
+    """Installs rule files into profile rules directory and substitutes configuration parameters.
+
+    Args:
+        workspace_dir: Path to the root workspace directory.
+        target_rules_dir: Target directory where rule files will be installed.
+        config: Optional configuration dictionary with environment parameters.
+    """
+    source_rules_dir = workspace_dir / "rules"
+    if not source_rules_dir.exists():
+        return
+
+    target_rules_dir.mkdir(parents=True, exist_ok=True)
+    for src in source_rules_dir.glob("*.md"):
+        dst = target_rules_dir / src.name
+        print(f"Installing rule '{src.name}' into {dst}...")
+        try:
+            with open(src, "r", encoding="utf-8") as f:
+                content = f.read()
+            if config:
+                content = replace_placeholders(content, config)
+            with open(dst, "w", encoding="utf-8") as f:
+                f.write(content)
+        except Exception as e:
+            print(f"Error installing rule {src.name}: {e}", file=sys.stderr)
+    print(f"Rules successfully installed in {target_rules_dir}")
 
 
 def get_profile_dir(flavor: str) -> Path | None:
@@ -454,6 +477,15 @@ def uninstall_flavor(
         else:
             print(f"No Google SecOps skills found in {target_dir}.")
 
+        target_rules_dir = target_dir.parent / "rules"
+        env_rule_file = target_rules_dir / "secops-environment.md"
+        if env_rule_file.exists():
+            print(f"Removing rule 'secops-environment.md' from {target_rules_dir}...")
+            try:
+                env_rule_file.unlink()
+            except Exception as e:
+                print(f"Error removing {env_rule_file}: {e}", file=sys.stderr)
+
 
 def main() -> None:
     """Main CLI entry point for the installation script."""
@@ -540,6 +572,7 @@ def main() -> None:
                     )
             else:
                 install_skills(workspace_dir, target_dir)
+                install_rules(workspace_dir, target_dir.parent / "rules", config)
                 if args.mode == "global" and config:
                     install_mcp_config(workspace_dir, flavor, config)
 
