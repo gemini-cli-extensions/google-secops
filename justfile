@@ -1,27 +1,26 @@
-# lists all targets
+# List all available targets
 list:
   just -l
 
-# Install Google SecOps extension into Agi/Antigravity plugins directory (Standalone App) - supports global install (default) or project level with mode=project and project-path=<path>
-install-agy-dsk mode="global" project-path=".":
-  python3 scripts/install.py --flavor=agy-dsk --mode={{mode}} --project-path={{project-path}}
+# Install plugin for Antigravity Desktop
+install-agy-dsk mode="global" path=".":
+  python3 scripts/install.py --flavor=agy-dsk --mode={{mode}} --project-path={{path}}
+
+# Install skills for Antigravity IDE
+install-agy-ide mode="global" path=".":
+  python3 scripts/install.py --flavor=ide --mode={{mode}} --project-path={{path}}
+
+# Install skills for Antigravity CLI
+install-agy-cli mode="global" path=".":
+  python3 scripts/install.py --flavor=cli --mode={{mode}} --project-path={{path}}
+
+# Install for all Antigravity flavors (Desktop, IDE, CLI)
+install-agy-all mode="global" path=".":
+  python3 scripts/install.py --flavor=all --mode={{mode}} --project-path={{path}}
 
 
-# Install Google SecOps skills for AGY IDE - supports global install (default) or project level with mode=project and project-path=<path>
-install-agy-ide mode="global" project-path=".":
-  python3 scripts/install.py --flavor=ide --mode={{mode}} --project-path={{project-path}}
 
-# Install Google SecOps skills for AGY CLI - supports global install (default) or project level with mode=project and project-path=<path>
-install-agy-cli mode="global" project-path=".":
-  python3 scripts/install.py --flavor=cli --mode={{mode}} --project-path={{project-path}}
-
-# Install Google SecOps extension/skills for all flavors (Agi, IDE, CLI) - supports global install (default) or project level with mode=project and project-path=<path>
-install-agy-all mode="global" project-path=".":
-  python3 scripts/install.py --flavor=all --mode={{mode}} --project-path={{project-path}}
-
-
-
-# Uninstall Google SecOps extension from Agi plugins directory
+# Uninstall Antigravity extension
 uninstall-agy:
   #!/usr/bin/env bash
   set -euo pipefail
@@ -35,15 +34,15 @@ uninstall-agy:
       echo "Google SecOps extension is not installed in $TARGET_DIR"
   fi
 
-# Get the version from any JSON plugin/manifest file (defaults to plugin.json)
-plugin-version filepath="plugin.json":
-  @test/get_plugin_version.sh "{{filepath}}"
+# Get plugin version from manifest
+plugin-version file="plugin.json":
+  @test/get_plugin_version.sh "{{file}}"
 
-# Install Google SecOps extension into gemini CLI extensions directory
+# Install extension for Gemini CLI
 install-gemini:
   gemini extensions install https://github.com/gemini-cli-extensions/google-secops
 
-# Install/load Claude Code plugin - supports global persistent install (default) or local session loading with mode="local"
+# Install plugin for Claude Code
 install-claude mode="global":
   #!/usr/bin/env bash
   set -euo pipefail
@@ -57,6 +56,6 @@ install-claude mode="global":
       exit 1
   fi
 
-# Run all automated validation tests
+# Run automated validation test suite
 test:
   test/run_tests.sh

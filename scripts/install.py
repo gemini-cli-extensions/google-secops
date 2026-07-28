@@ -200,7 +200,6 @@ def install_agy_dsk(
     try:
         plugin_items = [
             "plugin.json",
-            "mcp_config.json",
             "skills",
             "rules",
             "agents",
@@ -229,7 +228,7 @@ def install_agy_dsk(
         sys.exit(1)
 
     # Perform variable replacement in config files
-    files_to_replace = ["mcp_config.json"]
+    files_to_replace = []
     for filename in files_to_replace:
         file_path = target_dir / filename
         if not file_path.exists():
@@ -344,16 +343,20 @@ def get_profile_dir(flavor: str) -> Path | None:
 
 
 def install_mcp_config(
-    workspace_dir: Path, flavor: str, config: dict[str, str]
+    workspace_dir: Path,
+    flavor: str,
+    config: dict[str, str],
+    target_dir: Path | None = None,
 ) -> None:
-    """Merges remote-mcp-secops server config into flavor profile mcp_config.json.
+    """Merges MCP server config into flavor profile or plugin mcp_config.json.
 
     Args:
         workspace_dir: Path to the root workspace directory.
-        flavor: Target flavor ('ide' or 'cli').
+        flavor: Target flavor ('agy-dsk', 'ide', or 'cli').
         config: Configuration dictionary with environment parameters.
+        target_dir: Optional target directory (used for agy-dsk plugin directory).
     """
-    profile_dir = get_profile_dir(flavor)
+    profile_dir = target_dir if target_dir else get_profile_dir(flavor)
     if not profile_dir:
         print(
             "Skipping MCP config installation: No profile directory found for"
@@ -494,6 +497,8 @@ def main() -> None:
         print(f"\n--- Installing flavor '{flavor}' ({args.mode} mode) ---")
         if flavor == "agy-dsk":
             install_agy_dsk(workspace_dir, target_dir, config)
+            if config:
+                install_mcp_config(workspace_dir, flavor, config, target_dir)
         else:
             install_skills(workspace_dir, target_dir)
             if args.mode == "global" and config:

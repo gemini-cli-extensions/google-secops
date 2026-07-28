@@ -134,7 +134,7 @@ During installation under Antigravity / Gemini CLI, you will be prompted for sev
 > **Note**: For Antigravity, these values are persisted in `~/.gemini/extensions/google-secops/.env`. You can edit this file at any time to update your configuration.
 
 #### Claude Code Configuration
-For Claude Code, since it loads the `.mcp.json` definition directly, the variables (`PROJECT_ID`, `CUSTOMER_ID`, `REGION`, `SERVER_URL`) should be set in your shell environment or loaded using tools like `direnv` or a `.env` file in the current working directory.
+For Claude Code, the required environment variables (`PROJECT_ID`, `CUSTOMER_ID`, `REGION`, `SERVER_URL`) should be set in your shell environment or loaded using tools like `direnv` or a `.env` file in the current working directory.
 
 ### 2. Verify Skills
 
