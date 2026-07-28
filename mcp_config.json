@@ -1,10 +1,10 @@
 {
   "mcpServers": {
     "google-security-operations": {
-      "serverUrl": "https://chronicle.us.rep.googleapis.com/mcp",
+      "serverUrl": "${SERVER_URL}",
       "authProviderType": "google_credentials",
       "headers": {
-        "x-goog-user-project": "secops-demo-env"
+        "x-goog-user-project": "${PROJECT_ID}"
       }
     }
   }

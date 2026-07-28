@@ -403,18 +403,9 @@ def install_mcp_config(
         if "mcpServers" not in target_data:
             target_data["mcpServers"] = {}
 
-        # Merge configuration preserving existing user-configured x-goog-user-project if present
+        # Merge server configuration with newly resolved user settings
         for srv_name, srv_config in src_mcp_servers.items():
-            if srv_name in target_data["mcpServers"]:
-                existing_srv = target_data["mcpServers"][srv_name]
-                existing_user_project = existing_srv.get("headers", {}).get("x-goog-user-project")
-                target_data["mcpServers"][srv_name] = srv_config
-                if existing_user_project:
-                    if "headers" not in target_data["mcpServers"][srv_name]:
-                        target_data["mcpServers"][srv_name]["headers"] = {}
-                    target_data["mcpServers"][srv_name]["headers"]["x-goog-user-project"] = existing_user_project
-            else:
-                target_data["mcpServers"][srv_name] = srv_config
+            target_data["mcpServers"][srv_name] = srv_config
 
         # Write merged config back to profile directory
         with open(mcp_config_path, "w", encoding="utf-8") as f:
