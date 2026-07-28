@@ -43,14 +43,19 @@ plugin-version filepath="plugin.json":
 install-gemini:
   gemini extensions install https://github.com/gemini-cli-extensions/google-secops
 
-# Claude Code: load the plugin for ONE session only (session-scoped, nothing persisted)
-install-claude:
-  claude --plugin-dir "{{justfile_directory()}}"
-
-# Claude Code: install persistently via the marketplace (user scope, available in every session incl. `-p`)
-install-claude-persistent:
-  claude plugin marketplace add gemini-cli-extensions/google-secops
-  claude plugin install google-secops@google-secops
+# Install/load Claude Code plugin - supports global persistent install (default) or local session loading with mode="local"
+install-claude mode="global":
+  #!/usr/bin/env bash
+  set -euo pipefail
+  if [ "{{mode}}" = "global" ]; then
+      claude plugin marketplace add gemini-cli-extensions/google-secops
+      claude plugin install google-secops@google-secops
+  elif [ "{{mode}}" = "local" ] || [ "{{mode}}" = "project" ] || [ "{{mode}}" = "session" ]; then
+      claude --plugin-dir "{{justfile_directory()}}"
+  else
+      echo "Error: Unknown mode '{{mode}}'. Valid options are: global, local, project, session." >&2
+      exit 1
+  fi
 
 # Run all automated validation tests
 test:
