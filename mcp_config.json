@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "google-security-operations": {
+      "serverUrl": "${SERVER_URL}",
+      "authProviderType": "google_credentials",
+      "headers": {
+        "x-goog-user-project": "${PROJECT_ID}"
+      }
+    }
+  }
+}

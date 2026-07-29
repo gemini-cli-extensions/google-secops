@@ -5,6 +5,9 @@ slash_command: /secops:hunt
 category: security_operations
 personas:
   - threat_hunter
+metadata:
+  author: Google
+  version: 1.1.0
 ---
 
 # Threat Hunter

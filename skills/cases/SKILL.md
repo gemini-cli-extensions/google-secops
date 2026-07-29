@@ -5,6 +5,9 @@ slash_command: /secops:cases
 category: security_operations
 personas:
   - tier1_soc_analyst
+metadata:
+  author: Google
+  version: 1.1.0
 ---
 
 # Security Cases Specialist

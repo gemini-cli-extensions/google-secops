@@ -1,0 +1,6 @@
+{
+  "name": "google-secops",
+  "version": "1.1.0",
+  "description": "Essential Security Operations skills for Triage, Investigation, and Hunting.",
+  "skills": "./skills/"
+}

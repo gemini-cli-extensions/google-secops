@@ -1,1 +1,1 @@
-GEMINI.md
+rules/GEMINI.md

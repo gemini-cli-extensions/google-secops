@@ -1,0 +1,16 @@
+{
+  "name": "google-secops",
+  "owner": {
+    "name": "Google"
+  },
+  "metadata": {
+    "description": "Marketplace for the Google SecOps extension: curated agent skills for Security Operations."
+  },
+  "plugins": [
+    {
+      "name": "google-secops",
+      "source": "./",
+      "description": "Essential Security Operations skills for Triage, Investigation, and Hunting."
+    }
+  ]
+}

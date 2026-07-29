@@ -76,23 +76,68 @@ gemini extensions install https://github.com/gemini-cli-extensions/google-secops
     gemini extensions install .
     ```
 
+### Option 3: Install as an Antigravity Plugin (via `just`)
+
+If you have `just` installed, you can use the provided recipes:
+```bash
+# Install globally for Antigravity Desktop
+just install-agy-dsk
+
+# Or install for all Antigravity runtimes (Desktop, IDE, CLI)
+just install-agy-all
+
+# Uninstall (supports specific flavors like uninstall-agy-dsk or all flavors via uninstall-agy)
+just uninstall-agy
+```
+
 ### Updating and Uninstalling
 
 *   **Update**: `gemini extensions update google-secops`
 *   **Uninstall**: `gemini extensions uninstall google-secops`
 
+## Loading as a Plugin (Antigravity, Claude Code & OpenAI Codex)
+
+You can load this extension directly as a plugin in **Antigravity**, **Claude Code**, and **OpenAI Codex**.
+
+### Antigravity Integration
+To load the extension in Antigravity, place or symlink the repository folder inside one of these directories:
+*   **Workspace-Level**: Place in `.agents/plugins/google-secops/` (active only for the current workspace).
+*   **Global-Level**: Place in `~/.gemini/config/plugins/google-secops/` (active across all workspaces).
+
+Antigravity will automatically discover the `plugin.json` manifest file at the root of the directory and expose all SecOps skills, guidelines, and rules.
+
+### Claude Code Integration
+To load the extension in Claude Code:
+*   **Workspace-Level**: Place or symlink the repository folder inside `.claude/plugins/google-secops/` at the root of your workspace.
+*   **Global-Level**: Run the `claude` command with the plugin directory flag:
+    ```bash
+    claude --plugin-dir /path/to/google-secops
+    ```
+
+Claude Code will automatically discover the `.claude-plugin/plugin.json` manifest and expose all skills under the `/google-secops:` namespace.
+
+### OpenAI Codex Integration
+To load the extension in Codex:
+*   **Workspace-Level / Manual Integration**: Place or symlink the repository folder inside `.codex-plugin/` at the root of your workspace or custom plugin marketplace directory.
+
+Codex will automatically discover the `.codex-plugin/plugin.json` manifest file at the root of the directory and register all SecOps skills.
+
+
 ## Post-Installation
 
 ### 1. Configuration
 
-During installation, you will be prompted for several parameters:
+During installation under Antigravity / Gemini CLI, you will be prompted for several parameters:
 
 *   `PROJECT_ID`: Your Google Cloud Project ID (not number).
 *   `CUSTOMER_ID`: Your Chronicle Customer UUID4.
 *   `REGION`: Your Chronicle Region (e.g., `us`, `europe-west1`).
 *   `SERVER_URL`: The regional MCP endpoint (e.g., `https://chronicle.us.rep.googleapis.com/mcp`).
 
-> **Note**: These values are persisted in `~/.gemini/extensions/google-secops/.env`. You can edit this file at any time to update your configuration.
+> **Note**: For Antigravity, these values are persisted in `~/.gemini/extensions/google-secops/.env`. You can edit this file at any time to update your configuration.
+
+#### Claude Code Configuration
+For Claude Code, the required environment variables (`PROJECT_ID`, `CUSTOMER_ID`, `REGION`, `SERVER_URL`) should be set in your shell environment or loaded using tools like `direnv` or a `.env` file in the current working directory.
 
 ### 2. Verify Skills
 
@@ -102,15 +147,12 @@ Run the following command to ensure the skills are loaded:
 /skills list
 ```
 
-You should see `secops-setup-antigravity`, `secops-triage`, etc., in the list.
+You should see `secops-triage`, etc., in the list.
 
 ## Usage
 
 ### Available Skills
 
-*   **Setup Assistant** (`secops-setup-antigravity`)
-    *   *Trigger*: "Help me set up Antigravity", "Configure Antigravity for SecOps"
-    *   *Function*: Helps configure Antigravity to also use the Remote MCP Server.
 *   **Alert Triage** (`secops-triage`)
     *   *Trigger*: "Triage alert [ID]", "Analyze case [ID]"
     *   *Function*: Orchestrates a Tier 1 triage workflow (deduplication, enrichment, classification).
@@ -123,6 +165,9 @@ You should see `secops-setup-antigravity`, `secops-triage`, etc., in the list.
 *   **Cases** (`secops-cases`)
     *   *Trigger*: "List cases", "Show recent cases", "/secops:cases"
     *   *Function*: Lists recent SOAR cases to verify connectivity.
+*   **Detection Engineering** (`secops-detection-engineering`)
+    *   *Trigger*: "Evaluate detection coverage", "Generate TDOs from blog", "Check rule coverage for TTP"
+    *   *Function*: Automates the end-to-end detection engineering workflow (threat intell extraction, TDO generation, synthetic event simulation, coverage evaluation, and YARA-L rule creation).
 
 ### Custom Commands
 
@@ -132,6 +177,7 @@ Use these shortcuts for common tasks:
 *   `/secops:investigate <CASE_ID>`
 *   `/secops:hunt <THREAT>`
 *   `/secops:cases`
+*   `/secops:detection-engineering <THREAT_INTEL>`
 
 ## Known Issues
 
