@@ -547,11 +547,9 @@ def main() -> None:
         else ["agy-dsk", "ide", "cli"]
     )
 
-    # We prompt/config only if installing (not uninstalling) and installing standalone OR in global mode
+    # We prompt/config for all installations so rules and MCP configs have resolved parameters
     config = None
-    if not args.uninstall and (
-        "agy-dsk" in flavors_to_install or args.mode == "global"
-    ):
+    if not args.uninstall:
         defaults = get_defaults()
         config = prompt_user(defaults)
 
