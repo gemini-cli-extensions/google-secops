@@ -29,16 +29,18 @@ The table below summarizes the official global and workspace paths for each runt
 
 ### 1. Plugin Bundling vs. Standalone Skills (Desktop Parity)
 A critical distinction in Antigravity Desktop (`agy-dsk`) is the difference between standalone skill scripts and structured plugin bundles:
-- **Plugin Bundles (Recommended)**: When a plugin manifest (`plugin.json`) is deployed to `~/.gemini/config/plugins/<plugin-name>/` (global) or `<workspace-root>/.agents/plugins/<plugin-name>/` (project), Antigravity Desktop automatically scans and registers all skills inside the plugin's `skills/` subdirectory. This keeps plugin skills and dependencies isolated from global namespaces.
+- **Plugin Bundles (Recommended)**: When a plugin manifest (`plugin.json`) is deployed to `~/.gemini/config/plugins/<plugin-name>/` (global) or `<workspace-root>/.agents/plugins/<plugin-name>/` (project, with `<workspace-root>/_agents/plugins/` as an alternate workspace path), Antigravity Desktop automatically scans and registers all skills inside the plugin's `skills/` subdirectory. This keeps plugin skills and dependencies isolated from global namespaces.
 - **Standalone Skills**: For IDE and CLI flavors (or simple standalone scripts), skills are installed directly into flavor-specific profile directories (`~/.gemini/antigravity/skills/` or `~/.gemini/antigravity-cli/skills/`).
-- **Workspace Parity**: All three runtimes standardize on `<workspace-root>/.agents/skills/` for standalone project-level skills.
+- **Workspace Parity**: All three runtimes standardize on `<workspace-root>/.agents/skills/` for standalone project-level skills (maintaining backward compatibility for legacy `.agent/skills/` singular syntax).
 
 ### 2. Model Context Protocol (MCP) Resolution & Isolation
 - **Plugin-Scoped MCP Config**: In Antigravity Desktop, plugins define their own `mcp_config.json` directly inside their plugin root (`~/.gemini/config/plugins/<plugin-name>/mcp_config.json`). Antigravity automatically loads these servers when the plugin is active, avoiding global `~/.gemini/config/mcp_config.json` namespace pollution.
 - **Profile-Scoped MCP Config**: For IDE and CLI flavors, global MCP configurations are merged directly into their profile directories (`~/.gemini/antigravity/mcp_config.json` or `~/.gemini/antigravity-cli/mcp_config.json`).
+- **OAuth Token Cache**: Cached OAuth access tokens for `google_credentials` auth provider endpoints are stored in `~/.gemini/antigravity/mcp_oauth_tokens.json`. Expired tokens are refreshed automatically; invalid or corrupted tokens can be pruned from this file during troubleshooting.
 - **Safe Configuration Merging**: When automated deployment tools (like `scripts/install.py`) install or update MCP configs, they use parameterized template variables (`${SERVER_URL}`, `${PROJECT_ID}`) and perform safe dictionary merges. This ensures user-configured headers (such as `x-goog-user-project`) are preserved across updates without clobbering existing configuration files.
 
-### 3. Legacy Gemini CLI Migration
+### 3. Cross-Page Documentation Discrepancies & Legacy Migration
+- **Documentation Resolution Hierarchy**: General overview pages (such as `/docs/skills`) describe a single global skills path (`~/.gemini/config/skills/`), but product-surface specific guides (`/docs/ide/skills` and `/docs/cli/plugins`) override this with surface-specific profile paths (`~/.gemini/antigravity/skills/` and `~/.gemini/antigravity-cli/skills/`). The installer follows surface-specific paths to ensure proper isolation.
 - Legacy Gemini CLI workspace skills (`.gemini/skills/`) must be relocated to `.agents/skills/`.
 - Legacy Gemini CLI extensions can be loaded natively as plugins by adding a `plugin.json` manifest alongside `gemini-extension.json`.
 
