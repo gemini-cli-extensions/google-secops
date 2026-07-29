@@ -168,13 +168,12 @@ def get_target_dir(flavor: str, mode: str, project_path: str) -> Path:
         return project_root / ".agents" / "skills"
 
     # Global mode
-    gemini_home = Path.home() / ".gemini"
     if flavor == "agy-dsk":
-        return gemini_home / "config" / "plugins" / "google-secops"
-    elif flavor == "ide":
-        return gemini_home / "antigravity" / "skills"
-    elif flavor == "cli":
-        return gemini_home / "antigravity-cli" / "skills"
+        return Path.home() / ".gemini" / "config" / "plugins" / "google-secops"
+
+    profile_dir = get_profile_dir(flavor)
+    if profile_dir:
+        return profile_dir / "skills"
 
     raise ValueError(f"Unknown flavor: {flavor}")
 
