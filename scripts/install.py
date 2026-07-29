@@ -198,6 +198,7 @@ def install_agy_dsk(
             "skills",
             "rules",
             "agents",
+            "commands",
             "hooks.json",
             "README.md",
         ]

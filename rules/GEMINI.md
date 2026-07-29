@@ -177,6 +177,7 @@ Use these shortcuts for common tasks:
 *   `/secops:investigate <CASE_ID>`
 *   `/secops:hunt <THREAT>`
 *   `/secops:cases`
+*   `/secops:detection-engineering <THREAT_INTEL>`
 
 ## Known Issues
 
