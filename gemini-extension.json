@@ -51,7 +51,7 @@
         "x-goog-user-project": "${PROJECT_ID}",
         "User-Agent": "agent-skills/1.0 (skill:google-secops)"
       },
-      "disabledTools": [
+      "excludeTools": [
         "create_feed",
         "update_feed",
         "run_parser",

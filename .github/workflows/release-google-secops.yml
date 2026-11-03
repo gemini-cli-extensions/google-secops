@@ -5,13 +5,23 @@ on:
     tags:
       - 'google-secops-v*'
 
+permissions: {}
+
+concurrency:
+  group: "release-${{ github.ref }}"
+  cancel-in-progress: false
+
 jobs:
   release:
-    runs-on: ubuntu-latest
+    name: Create and publish release
+    runs-on: ubuntu-24.04
     permissions:
-      contents: write
+      contents: write # Required to create GitHub releases and upload the plugin archive
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Create Plugin Archive
         run: |
@@ -21,6 +31,12 @@ jobs:
           unzip -l google-secops.zip
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
-        with:
-          files: google-secops.zip
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          if gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            gh release upload "$TAG_NAME" google-secops.zip --clobber
+          else
+            gh release create "$TAG_NAME" google-secops.zip --title "$TAG_NAME" --generate-notes
+          fi
