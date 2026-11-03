@@ -1,0 +1,35 @@
+{
+  "mcpServers": {
+    "secops": {
+      "url": "https://${REGION}-chronicle.googleapis.com/mcp",
+      "authProviderType": "google_credentials",
+      "headers": {
+        "x-goog-user-project": "${PROJECT_ID}",
+        "User-Agent": "agent-skills/1.0 (skill:google-secops)"
+      },
+      "disabledTools": [
+        "create_feed",
+        "update_feed",
+        "run_parser",
+        "list_feeds",
+        "get_feed",
+        "disable_feed",
+        "enable_feed"
+      ],
+      "variables": [
+        {
+          "name": "PROJECT_ID",
+          "title": "Google Cloud Project ID",
+          "description": "Google Cloud Project ID bound to your Google SecOps tenant (for example, my-secops-project). Used for quota/billing header routing and MCP tool calls.",
+          "link": "https://cloud.google.com/chronicle/docs/secops/use-google-secops-mcp"
+        },
+        {
+          "name": "REGION",
+          "title": "Google SecOps Region",
+          "description": "Google SecOps regional or multi-regional location prefix (for example, us, eu, europe-west2, or asia-southeast1). Resolves https://<REGION>-chronicle.googleapis.com/mcp.",
+          "link": "https://cloud.google.com/chronicle/docs/secops/use-google-secops-mcp"
+        }
+      ]
+    }
+  }
+}

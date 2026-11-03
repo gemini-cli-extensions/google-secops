@@ -1,4 +1,4 @@
-name: Release Google SecOps Extension
+name: Release Google SecOps Plugin
 
 on:
   push:
@@ -11,12 +11,12 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Create Extension Artifact
+      - name: Create Plugin Archive
         run: |
           zip -r google-secops.zip . \
-            -x ".git/*" ".github/*" "scripts/*" ".env.example" "README.md" "TOOL_MAPPING.md" ".python-version" ".gitignore"
+            -x ".git/*" ".github/*" ".env.example" ".python-version" ".gitignore"
           # Verify zip content
           unzip -l google-secops.zip
 

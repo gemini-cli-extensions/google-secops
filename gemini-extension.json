@@ -1,44 +1,45 @@
 {
   "name": "google-secops",
-  "contextFileName": "GEMINI.md",
-  "description": "Essential Security Operations skills for Triage, Investigation, and Hunting.",
-  "version": "1.1.0",
+  "contextFileName": "rules/AGENTS.md",
+  "description": "Security Operations skills and managed remote MCP integration for alert triage, incident investigation, threat hunting, case management, and YARA-L 2.0 detection engineering in Google SecOps.",
+  "version": "1.2.0",
   "skills": [
-    "skills/setup-antigravity",
-    "skills/triage",
-    "skills/investigate",
-    "skills/hunt",
-    "skills/cases"
+    "skills/secops-cases",
+    "skills/secops-triage",
+    "skills/secops-investigate",
+    "skills/secops-hunt",
+    "skills/secops-detection-engineering"
   ],
   "settings": [
     {
       "name": "PROJECT_ID",
-      "description": "Your Google Cloud Project ID (from /settings/profile).",
+      "description": "Your Google Cloud Project ID bound to Google SecOps.",
       "envVar": "PROJECT_ID",
       "sensitive": false
     },
     {
       "name": "CUSTOMER_ID",
-      "description": "Your Chronicle Customer UUID (from /settings/profile).",
+      "description": "Your Google SecOps Customer UUID (from Settings > Profile in Google SecOps).",
       "envVar": "CUSTOMER_ID",
       "sensitive": false
     },
     {
       "name": "REGION",
-      "description": "Your Chronicle Region (e.g. 'us', 'europe-west1').",
+      "defaultValue": "us",
+      "description": "Your Google SecOps region (for example, 'us', 'eu', 'europe-west2').",
       "envVar": "REGION",
       "sensitive": false
     },
     {
       "name": "SERVER_URL",
-      "defaultValue": "https://chronicle.us.rep.googleapis.com/mcp",
-      "description": "The URL of the remote MCP server See https://docs.cloud.google.com/chronicle/docs/secops/use-google-secops-mcp.",
+      "defaultValue": "https://us-chronicle.googleapis.com/mcp",
+      "description": "The URL of the remote Google SecOps MCP server (https://<REGION>-chronicle.googleapis.com/mcp).",
       "envVar": "SERVER_URL",
       "sensitive": false
     }
   ],
   "mcpServers": {
-    "remote-mcp-secops": {
+    "secops": {
       "httpUrl": "${SERVER_URL}",
       "authProviderType": "google_credentials",
       "oauth": {
@@ -47,21 +48,17 @@
         ]
       },
       "headers": {
-        "x-goog-user-project": "${PROJECT_ID}"
-      },
-      "env": {
-        "PROJECT_ID": "${PROJECT_ID}",
-        "CUSTOMER_ID": "${CUSTOMER_ID}",
-        "REGION": "${REGION}"
+        "x-goog-user-project": "${PROJECT_ID}",
+        "User-Agent": "agent-skills/1.0 (skill:google-secops)"
       },
       "disabledTools": [
-        "list_log_types",
-        "list_parsers",
-        "list_integrations",
-        "list_integration_actions",
-        "execute_manual_action",
-        "create_reference_list",
-        "get_reference_list"
+        "create_feed",
+        "update_feed",
+        "run_parser",
+        "list_feeds",
+        "get_feed",
+        "disable_feed",
+        "enable_feed"
       ]
     }
   }
