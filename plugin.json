@@ -1,0 +1,29 @@
+{
+  "name": "google-secops",
+  "displayName": "Google Security Operations",
+  "version": "1.2.0",
+  "description": "Security Operations skills and managed remote MCP integration for alert triage, incident investigation, threat hunting, case management, and YARA-L 2.0 detection engineering in Google SecOps.",
+  "logo": "assets/logo.svg",
+  "author": {
+    "name": "Google LLC",
+    "url": "https://cloud.google.com/security"
+  },
+  "homepage": "https://github.com/gemini-cli-extensions/google-secops",
+  "repository": "https://github.com/gemini-cli-extensions/google-secops",
+  "license": "Apache-2.0",
+  "keywords": [
+    "secops",
+    "chronicle",
+    "siem",
+    "soar",
+    "security",
+    "triage",
+    "threat-hunting",
+    "yaral"
+  ],
+  "suggestedPrompts": [
+    "List recent open cases in Google SecOps and summarize the highest-priority alerts",
+    "Investigate security telemetry and entity activity for a suspicious IP or SHA-256 hash",
+    "Evaluate YARA-L 2.0 detection rule coverage against a new threat intelligence report"
+  ]
+}
