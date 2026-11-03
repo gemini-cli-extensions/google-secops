@@ -10,6 +10,8 @@ All remote Google SecOps MCP tool calls (`secops` server) require three tenant i
 
 Resolve `projectId`, `customerId`, and `region` from workspace rules (`AGENTS.md`, `GEMINI.md`, `.agents/rules/`), active conversation context, or user-supplied values. If `projectId` or `customerId` is not yet present in context, ask the user once for the missing identifier before invoking Google SecOps MCP tools. Never guess tenant identifiers and never scan local credential files to infer them.
 
+Always read a `secops` tool's JSON schema before calling it and pass `projectId`, `customerId`, and `region` in exact camelCase on every call (except `get_operation`, which takes `name`). Never invoke a `secops` tool with empty `{}` arguments: missing path parameters trigger an HTTP `400 Bad Request` on the managed MCP transport that disconnects the server for the remainder of the session.
+
 ## 2. Unconditional MCP Hard-Stop Guardrail
 
 Google SecOps operations must run exclusively through registered MCP tools exposed in your active tool list (primary remote `secops` server tools such as `udm_search`, `list_cases`, `get_case`, `summarize_entity`, `validate_rule`, or already-registered local SecOps MCP tools).

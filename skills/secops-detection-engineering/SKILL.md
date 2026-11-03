@@ -89,16 +89,16 @@ A missing MCP tool is a configuration failure to report, never an obstacle to ro
 
 | Capability & Stage | Registered MCP Tool (Offline Pre-Check) | Key Input Arguments | Return Values / Output |
 | :--- | :--- | :--- | :--- |
-| **Validate Syntax** (W1.2) | `validate_rule` (`scripts/validate_yaral_rule.py`) | `rule`: YARA-L text (`--input {rule_or_doc_path}`) | Compilation status, errors |
-| **Test Detections** (W1.3) | `list_rule_detections` | `rule_id` or filters | Historical hits, timestamps |
-| **Inspect Rule** (W1/W2) | `get_rule` | `rule_id`: Rule ID | Config, YARA-L, `alertingEnabled` |
-| **List Rules** (W1/W2) | `list_rules` | `page_size`, `page_token` | Active/archived rule summaries |
-| **Deploy Rule** (W1/W2) | `create_rule` | `rule`: Validated YARA-L | Created rule with `rule_id` |
-| **Generate TDOs** (W2.2) | `generate_threat_detection_opportunity` | Cleaned CTI text | Threat Detection Opportunities |
-| **Synthetic Events** (W2.3) | `generate_synthetic_events` | `threatDetectionOpportunity` | `syntheticEvents` (`udmJson`) |
-| **Evaluate Coverage** (W2.4) | `evaluate_rule_coverage_long_running` (`evaluate_rule_coverage`) | `threatDetectionOpportunityEvents` | `google.longrunning.Operation` |
+| **Validate Syntax** (W1.2) | `validate_rule` (`scripts/validate_yaral_rule.py`) | `projectId`, `customerId`, `region`, `rule`: YARA-L text (`--input {rule_or_doc_path}`) | Compilation status, `compilationDiagnostics` |
+| **Test Detections** (W1.3) | `list_rule_detections` | `projectId`, `customerId`, `region`, `ruleId`, `startTime`, `endTime`, `pageSize` | Historical hits, timestamps |
+| **Inspect Rule** (W1/W2) | `get_rule` | `projectId`, `customerId`, `region`, `ruleId`: Rule ID | Config, YARA-L, `alertingEnabled` |
+| **List Rules** (W1/W2) | `list_rules` | `projectId`, `customerId`, `region`, `pageSize`, `pageToken`, `filter` | Active/archived rule summaries |
+| **Deploy Rule** (W1/W2) | `create_rule` | `projectId`, `customerId`, `region`, `rule`: Validated YARA-L | Created rule with `ruleId` |
+| **Generate TDOs** (W2.2) | `generate_threat_detection_opportunity` | `projectId`, `customerId`, `region`, `threat`: Cleaned CTI text | Threat Detection Opportunities |
+| **Synthetic Events** (W2.3) | `generate_synthetic_events` | `projectId`, `customerId`, `region`, `threatDetectionOpportunity` | `syntheticEvents` (`udmJson`) |
+| **Evaluate Coverage** (W2.4) | `evaluate_rule_coverage_long_running` (`evaluate_rule_coverage`) | `projectId`, `customerId`, `region`, `threatDetectionOpportunityEvents` (`udmsJson`) | `google.longrunning.Operation` |
 | **Poll Async Ops** (W2.4) | `get_operation` | `name`: Operation name | `done: bool`, `result.response` |
-| **Mitigate Gaps** (W2.6) | `generate_rules` | Gap TDO objects | Drafted YARA-L 2.0 rules |
+| **Mitigate Gaps** (W2.6) | `generate_rules` | `projectId`, `customerId`, `region`, `threatDetectionOpportunity` | Drafted YARA-L 2.0 rules |
 
 ---
 
@@ -191,12 +191,12 @@ Before deploying any rule to the production environment, present the rule and ob
 
 Upon user approval:
 
-- Call `create_rule` passing the complete YARA-L rule text in the `rule` parameter.
-- Record the returned `rule_id`.
+- Call `create_rule` passing `projectId`, `customerId`, `region`, and the complete YARA-L rule text in the `rule` parameter.
+- Record the returned `ruleId`.
 
 ### Step 6: Enablement & Alerting Configuration
 
-- Call `get_rule(rule_id=...)` to verify that the deployed rule exists and inspect its configuration.
+- Call `get_rule(projectId=..., customerId=..., region=..., ruleId=...)` to verify that the deployed rule exists and inspect its configuration.
 - Confirm alerting status (`alertingEnabled`). If alerting configuration requires updating, guide the user on enabling live alerts for the rule.
 
 ---
@@ -275,7 +275,7 @@ After ALL synthetic events are generated for ALL TDOs:
 
 For every distinct rule ID matched in Step 4:
 
-- Call `get_rule(rule_id=...)` to retrieve rule configuration.
+- Call `get_rule(projectId=..., customerId=..., region=..., ruleId=...)` to retrieve rule configuration.
 - **Protobuf Boolean Handling**: Protobuf JSON serialization omits boolean fields when `false`. If `alertingEnabled` is absent in the response payload, treat alerting as disabled (`alertingEnabled: false`). Do not extrapolate alerting status.
 - Extract key fields:
   - `ruleId`
@@ -312,8 +312,8 @@ Present findings using this mandatory schema for every evaluated TDO:
 
 - If new gap rules were generated in Step 6, present each rule clearly to the user.
 - Request user authorization: *"Would you like to deploy the generated rule for [TDO Title] into your Google SecOps environment?"*
-- For each approved rule, call `create_rule` with the rule text passed to the `rule` parameter.
-- Confirm successful creation and report the assigned `rule_id`.
+- For each approved rule, call `create_rule` with `projectId`, `customerId`, `region`, and the rule text passed to the `rule` parameter.
+- Confirm successful creation and report the assigned `ruleId`.
 
 ---
 
